@@ -1,0 +1,81 @@
+# Entirely invented review history. No candidate or source document exists.
+schema_version: "0b1"
+sources:
+  - source_id: src-fictional-record
+    title: Invented employer record
+    locator: synthetic://invented-record
+    sha256: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    confidentiality: PRIVATE
+  - source_id: src-fictional-note
+    title: Invented self report
+    locator: synthetic://invented-note
+    sha256: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+    confidentiality: PRIVATE
+assertions:
+  - assertion_id: asrt-fictional-role
+    source_id: src-fictional-record
+    location: line:1
+    text: 'Job title: Reliability Engineer'
+    field: job title
+    value: Reliability Engineer
+  - assertion_id: asrt-fictional-other-role
+    source_id: src-fictional-note
+    location: line:1
+    text: 'Job title: Maintenance Analyst'
+    field: job title
+    value: Maintenance Analyst
+  - assertion_id: asrt-fictional-claim
+    source_id: src-fictional-note
+    location: line:2
+    text: 'Quantitative achievement: doubled revenue'
+    field: quantitative achievement
+    value: doubled revenue
+  - assertion_id: asrt-fictional-skill
+    source_id: src-fictional-record
+    location: line:2
+    text: 'Skill proficiency: intermediate Python'
+    field: skill proficiency
+    value: intermediate Python
+conflicts:
+  - field: job title
+    assertion_ids: [asrt-fictional-role, asrt-fictional-other-role]
+decisions:
+  - decision_id: review-fictional-first
+    assertion_id: asrt-fictional-role
+    decision: NEEDS_EVIDENCE
+    reviewer: Fictional Human Reviewer
+    decided_at: 2026-01-01T10:00:00+00:00
+    reason: Invented sources disagree on the role title.
+    outstanding_evidence: An invented employer record with exact title.
+  - decision_id: review-fictional-second
+    assertion_id: asrt-fictional-role
+    decision: ACCEPT
+    reviewer: Fictional Human Reviewer
+    decided_at: 2026-01-02T10:00:00+00:00
+    reason: For this fictional example, the invented record takes precedence after manual review.
+    evidence_source_ids: [src-fictional-record]
+    personal_cv_permission: true
+    previous_decision_id: review-fictional-first
+  - decision_id: review-fictional-reject
+    assertion_id: asrt-fictional-claim
+    decision: REJECT
+    reviewer: Fictional Human Reviewer
+    decided_at: 2026-01-02T11:00:00+00:00
+    reason: No invented record supports this number.
+  - decision_id: review-fictional-qualify
+    assertion_id: asrt-fictional-skill
+    decision: QUALIFY
+    reviewer: Fictional Human Reviewer
+    decided_at: 2026-01-02T12:00:00+00:00
+    reason: The invented record supports limited use only.
+    evidence_source_ids: [src-fictional-record]
+    qualification: As recorded in the invented assessment.
+    approved_wording: Intermediate Python, as recorded in the invented assessment.
+    personal_cv_permission: true
+  - decision_id: review-fictional-outstanding
+    assertion_id: asrt-fictional-other-role
+    decision: NEEDS_EVIDENCE
+    reviewer: Fictional Human Reviewer
+    decided_at: 2026-01-02T13:00:00+00:00
+    reason: Title conflicts with the invented record.
+    outstanding_evidence: An invented role history.

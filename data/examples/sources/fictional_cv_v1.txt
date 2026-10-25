@@ -1,0 +1,8 @@
+Fictional CV of Mira Example. Every person and organisation here is invented.
+Employment date: 2020-01 to 2023-12
+Job title: Reliability Engineer
+Quantitative achievement: reduced downtime by 12 percent
+Project description: led the Beacon maintenance rollout
+Attribution: individual
+Skill proficiency: advanced Python
+Qualification: Northstar College safety certificate, current

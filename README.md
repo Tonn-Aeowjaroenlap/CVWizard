@@ -23,3 +23,15 @@ python -m unittest discover -s tests -v
 Existing CVs can supply leads for evidence collection, but their claims are not automatically verified. The approved claims ledger is distinct from verified source material; neither a source's verification nor a generated sentence grants permission to publish.
 
 See [architecture](docs/architecture.md), [roadmap](docs/roadmap.md) and the [v1 YAML schema](schemas/v1/dataset.schema.yaml).
+
+## Phase 0B1 fictional pilot
+
+```sh
+python -m cvwizard ingest data/examples/sources/fictional_cv_v1.txt data/examples/sources/fictional_cv_v2.md --output data/private/pilot-intake.yaml
+python -m cvwizard validate-intake data/private/pilot-intake.yaml
+python -m cvwizard review-report data/private/pilot-intake.yaml
+```
+
+The fictional documents intentionally disagree. Import creates only unverified assertions and potential conflict groups. [The fictional review ledger](data/examples/reviewed-intake.yaml) shows accepted, rejected, qualified and outstanding decisions and an approval change. Human review, audit entries, permission controls, format limits and a private real-data pilot checklist are described in [ingestion and review](docs/ingestion-and-review.md). `export-facts` writes only explicitly permitted reviewed facts to a local JSON file; it does not create a CV or publish anything.
+
+Private CLI outputs must go to established Git-ignored directories or under an explicit absolute `--private-output-root` outside Git. Qualified exports require reviewer-approved wording that includes the qualification.

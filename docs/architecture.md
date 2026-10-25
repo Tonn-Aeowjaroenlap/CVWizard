@@ -12,6 +12,8 @@ python -c 'import sys, yaml; from cvwizard.models import CareerDataset; sys.stdo
 
 The schema snapshot is tested against the Python model to catch drift. Cross-record rules remain in Python and are documented here; JSON Schema alone cannot check referenced IDs or human approval.
 
+The project pins Pydantic to 2.13.4 because newer releases can generate a different JSON Schema for the same model and fail the checked-in snapshot test. Revisit the pin and regenerate/review the snapshot as a separate schema maintenance change.
+
 ## Evidence model
 
 - `profile` identifies the candidate, separate from evidence.
@@ -31,3 +33,5 @@ Private or restricted sources may support an approved abstracted claim only afte
 ## V1 workflow and limits
 
 ChatGPT may help reason over user-provided evidence and draft proposed wording. Codex can organize local YAML, run validation and report issues. Neither may turn uncertainty into a verified fact or approve its own claim. The repository has no API, LLM client, scraper, CV generator, database or deployment. A later optional API can read and validate the same versioned dataset and enforce additional access controls without changing the evidence model.
+
+Phase 0B1 adds a separate private intake and review ledger without changing this V1 schema. Read [the ingestion and review workflow](ingestion-and-review.md) for ID conventions, conflict detection, audit records and export boundaries.
