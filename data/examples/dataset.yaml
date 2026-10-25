@@ -1,0 +1,233 @@
+# Entirely fictional. Names, organisations, records and numbers are invented.
+schema_version: "1.0"
+profile:
+  candidate_id: candidate-ada-example
+  display_name: Ada Example
+  headline: Fictional operations engineer
+sources:
+  - source_id: src-individual-review
+    kind: DOCUMENT
+    title: Fictional personal review excerpt
+    locator: synthetic://individual-review
+    provenance: Invented for CVWizard tests; no real person or document exists.
+    verification_status: VERIFIED
+    confidentiality: PRIVATE
+  - source_id: src-team-report
+    kind: RECORD
+    title: Fictional team delivery record
+    locator: synthetic://team-report
+    provenance: Invented for CVWizard tests; no real organisation exists.
+    verification_status: VERIFIED
+    confidentiality: PRIVATE
+  - source_id: src-programme-report
+    kind: RECORD
+    title: Fictional programme summary
+    locator: synthetic://programme-report
+    provenance: Invented for CVWizard tests; all numbers are fictional.
+    verification_status: VERIFIED_WITH_QUALIFICATION
+    confidentiality: RESTRICTED
+    qualifications: [across the programme]
+  - source_id: src-unchecked-note
+    kind: SELF_REPORT
+    title: Fictional unverified note
+    locator: synthetic://unchecked-note
+    provenance: Invented uncertain example; no underlying document exists.
+    verification_status: NEEDS_VERIFICATION
+    confidentiality: PRIVATE
+  - source_id: src-prohibited-note
+    kind: DOCUMENT
+    title: Fictional restricted note
+    locator: synthetic://prohibited-note
+    provenance: Invented restricted example; no underlying document exists.
+    verification_status: PROHIBITED
+    confidentiality: PROHIBITED_PUBLICATION
+evidence:
+  - evidence_id: ev-education
+    category: EDUCATION
+    description: Completed a fictional engineering diploma.
+    context: Imaginary Institute
+    start_date: 2014-01-01
+    end_date: 2016-12-31
+    contribution_scope: INDIVIDUAL
+    source_ids: [src-individual-review]
+    verification_status: VERIFIED
+    confidence: HIGH
+    confidentiality: PRIVATE
+    institution: Imaginary Institute
+    credential: Diploma in Engineering
+  - evidence_id: ev-employment
+    category: EMPLOYMENT
+    description: Held a fictional operations engineering role.
+    context: Example Works
+    start_date: 2019-01-01
+    contribution_scope: INDIVIDUAL
+    source_ids: [src-individual-review]
+    verification_status: VERIFIED
+    confidence: HIGH
+    confidentiality: PRIVATE
+    employer: Example Works
+    role: Operations Engineer
+  - evidence_id: ev-project
+    category: PROJECT
+    description: Participated in a fictional maintenance planning project.
+    context: Example Works maintenance team
+    start_date: 2022-02-01
+    end_date: 2022-10-31
+    contribution_scope: TEAM
+    source_ids: [src-team-report]
+    verification_status: VERIFIED
+    confidence: HIGH
+    confidentiality: PRIVATE
+    project_name: Maintenance Planner
+    role: Team member
+  - evidence_id: ev-skill
+    category: SKILL
+    description: Used fictional scheduling tools in a role.
+    context: Example Works
+    contribution_scope: INDIVIDUAL
+    source_ids: [src-individual-review]
+    verification_status: VERIFIED
+    confidence: MEDIUM
+    confidentiality: PRIVATE
+    skill_name: Maintenance scheduling
+  - evidence_id: ev-individual-achievement
+    category: ACHIEVEMENT
+    title: Inspection checklist
+    description: Designed a fictional inspection checklist.
+    context: Example Works workshop
+    start_date: 2021-03-01
+    end_date: 2021-05-31
+    contribution_scope: INDIVIDUAL
+    source_ids: [src-individual-review]
+    verification_status: VERIFIED
+    confidence: HIGH
+    confidentiality: PRIVATE
+    metrics:
+      - metric_id: metric-checklist-items
+        value: 12
+        unit: checklist items
+        scope: INDIVIDUAL
+        context: Items authored by the candidate, not an outcome measure.
+        source_ids: [src-individual-review]
+  - evidence_id: ev-team-achievement
+    category: ACHIEVEMENT
+    title: Team handover
+    description: Contributed to a fictional team handover guide.
+    context: Example Works maintenance team
+    contribution_scope: TEAM
+    source_ids: [src-team-report]
+    verification_status: VERIFIED
+    confidence: HIGH
+    confidentiality: PRIVATE
+  - evidence_id: ev-programme-result
+    category: ACHIEVEMENT
+    title: Programme result
+    description: A fictional programme reduced scheduled downtime.
+    context: Example Works improvement programme
+    contribution_scope: PROGRAMME
+    source_ids: [src-programme-report]
+    verification_status: VERIFIED_WITH_QUALIFICATION
+    confidence: MEDIUM
+    confidentiality: RESTRICTED
+    qualifications: [across the programme]
+    metrics:
+      - metric_id: metric-programme-downtime
+        value: 8.5
+        unit: percent reduction
+        scope: PROGRAMME
+        context: Fictional total programme result; not individually attributable.
+        source_ids: [src-programme-report]
+  - evidence_id: ev-publication
+    category: PUBLICATION
+    title: Fictional maintenance bulletin
+    description: Authored a fictional internal bulletin.
+    context: Example Works
+    contribution_scope: INDIVIDUAL
+    source_ids: [src-individual-review]
+    verification_status: VERIFIED
+    confidence: MEDIUM
+    confidentiality: PRIVATE
+    publisher: Example Works
+  - evidence_id: ev-certification
+    category: CERTIFICATION
+    title: Fictional safety certificate
+    description: Completed a fictional safety course.
+    context: Imaginary Training Centre
+    contribution_scope: INDIVIDUAL
+    source_ids: [src-individual-review]
+    verification_status: VERIFIED
+    confidence: MEDIUM
+    confidentiality: PRIVATE
+    issuer: Imaginary Training Centre
+  - evidence_id: ev-unverified
+    category: ACHIEVEMENT
+    title: Possible improvement
+    description: May have improved a fictional process.
+    context: Example Works
+    contribution_scope: INDIVIDUAL
+    source_ids: [src-unchecked-note]
+    verification_status: NEEDS_VERIFICATION
+    confidence: LOW
+    uncertainty: Extent and attribution have not been checked.
+    confidentiality: PRIVATE
+  - evidence_id: ev-prohibited
+    category: ACHIEVEMENT
+    title: Restricted result
+    description: Fictional result that must not be published.
+    context: Example Works
+    contribution_scope: INDIVIDUAL
+    source_ids: [src-prohibited-note]
+    verification_status: PROHIBITED
+    confidence: UNKNOWN
+    confidentiality: PROHIBITED_PUBLICATION
+claims:
+  - claim_id: claim-individual
+    proposed_statement: Designed a 12-item inspection checklist.
+    approved_statement: Designed a 12-item inspection checklist.
+    supporting_evidence_ids: [ev-individual-achievement]
+    contribution_scope: INDIVIDUAL
+    verification_status: VERIFIED
+    approval_status: APPROVED
+    usage_permission: GRANTED
+    approved_by: Fictional Reviewer
+    approved_on: 2026-01-01
+  - claim_id: claim-team
+    proposed_statement: Contributed to a team handover guide.
+    supporting_evidence_ids: [ev-team-achievement]
+    contribution_scope: TEAM
+    verification_status: VERIFIED
+    approval_status: PENDING
+    usage_permission: NOT_REQUESTED
+  - claim_id: claim-programme
+    proposed_statement: The improvement programme reduced scheduled downtime by 8.5%.
+    approved_statement: Across the programme, scheduled downtime fell by 8.5%.
+    supporting_evidence_ids: [ev-programme-result]
+    contribution_scope: PROGRAMME
+    verification_status: VERIFIED_WITH_QUALIFICATION
+    required_qualifications: [across the programme]
+    approval_status: APPROVED
+    usage_permission: GRANTED
+    approved_by: Fictional Reviewer
+    approved_on: 2026-01-01
+    reviewer_notes: Attribution is to the programme, not the candidate.
+  - claim_id: claim-unverified
+    proposed_statement: Improved the process.
+    supporting_evidence_ids: [ev-unverified]
+    contribution_scope: INDIVIDUAL
+    verification_status: NEEDS_VERIFICATION
+    approval_status: PENDING
+    usage_permission: NOT_REQUESTED
+  - claim_id: claim-unsupported
+    proposed_statement: Doubled company revenue.
+    supporting_evidence_ids: [ev-unverified]
+    contribution_scope: INDIVIDUAL
+    verification_status: UNSUPPORTED
+    approval_status: REJECTED
+    usage_permission: DENIED
+  - claim_id: claim-prohibited
+    proposed_statement: Disclose the restricted result.
+    supporting_evidence_ids: [ev-prohibited]
+    contribution_scope: INDIVIDUAL
+    verification_status: PROHIBITED
+    approval_status: REJECTED
+    usage_permission: DENIED

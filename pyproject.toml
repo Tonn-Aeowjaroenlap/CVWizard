@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cvwizard"
+version = "0.1.0"
+description = "Offline evidence and claims validation for CVWizard"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["pydantic>=2.6,<3", "PyYAML>=6,<7"]
+
+[project.scripts]
+cvwizard = "cvwizard.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+cvwizard = ["py.typed"]

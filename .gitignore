@@ -218,3 +218,24 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# CVWizard private inputs and generated outputs. Only data/examples is publishable.
+/data/private/*
+!/data/private/.gitkeep
+/sources_private/*
+!/sources_private/.gitkeep
+/generated/
+/outputs/
+/applications/
+/tmp/
+/work/
+*.docx
+*.pdf
+
+# Local credentials and key material
+.env.*
+*.pem
+*.key
+credentials.json
+secrets.yaml
+secrets.yml

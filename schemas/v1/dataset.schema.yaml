@@ -1,0 +1,956 @@
+$defs:
+  Achievement:
+    additionalProperties: false
+    properties:
+      evidence_id:
+        pattern: ^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$
+        title: Evidence Id
+        type: string
+      description:
+        minLength: 1
+        title: Description
+        type: string
+      context:
+        minLength: 1
+        title: Context
+        type: string
+      start_date:
+        anyOf:
+        - format: date
+          type: string
+        - type: 'null'
+        default: null
+        title: Start Date
+      end_date:
+        anyOf:
+        - format: date
+          type: string
+        - type: 'null'
+        default: null
+        title: End Date
+      contribution_scope:
+        $ref: '#/$defs/ContributionScope'
+      source_ids:
+        items:
+          pattern: ^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$
+          type: string
+        minItems: 1
+        title: Source Ids
+        type: array
+      verification_status:
+        $ref: '#/$defs/VerificationStatus'
+      confidence:
+        $ref: '#/$defs/Confidence'
+      uncertainty:
+        anyOf:
+        - minLength: 1
+          type: string
+        - type: 'null'
+        default: null
+        title: Uncertainty
+      confidentiality:
+        $ref: '#/$defs/Confidentiality'
+      metrics:
+        items:
+          $ref: '#/$defs/Metric'
+        title: Metrics
+        type: array
+      notes:
+        anyOf:
+        - minLength: 1
+          type: string
+        - type: 'null'
+        default: null
+        title: Notes
+      qualifications:
+        items:
+          minLength: 1
+          type: string
+        title: Qualifications
+        type: array
+      category:
+        const: ACHIEVEMENT
+        title: Category
+        type: string
+      title:
+        minLength: 1
+        title: Title
+        type: string
+    required:
+    - evidence_id
+    - description
+    - context
+    - contribution_scope
+    - source_ids
+    - verification_status
+    - confidence
+    - confidentiality
+    - category
+    - title
+    title: Achievement
+    type: object
+  ApprovalStatus:
+    enum:
+    - PENDING
+    - APPROVED
+    - REJECTED
+    title: ApprovalStatus
+    type: string
+  CandidateProfile:
+    additionalProperties: false
+    properties:
+      candidate_id:
+        pattern: ^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$
+        title: Candidate Id
+        type: string
+      display_name:
+        minLength: 1
+        title: Display Name
+        type: string
+      headline:
+        anyOf:
+        - minLength: 1
+          type: string
+        - type: 'null'
+        default: null
+        title: Headline
+      notes:
+        anyOf:
+        - minLength: 1
+          type: string
+        - type: 'null'
+        default: null
+        title: Notes
+    required:
+    - candidate_id
+    - display_name
+    title: CandidateProfile
+    type: object
+  CareerClaim:
+    additionalProperties: false
+    properties:
+      claim_id:
+        pattern: ^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$
+        title: Claim Id
+        type: string
+      proposed_statement:
+        minLength: 1
+        title: Proposed Statement
+        type: string
+      approved_statement:
+        anyOf:
+        - minLength: 1
+          type: string
+        - type: 'null'
+        default: null
+        title: Approved Statement
+      supporting_evidence_ids:
+        items:
+          pattern: ^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$
+          type: string
+        minItems: 1
+        title: Supporting Evidence Ids
+        type: array
+      contribution_scope:
+        $ref: '#/$defs/ContributionScope'
+      verification_status:
+        $ref: '#/$defs/VerificationStatus'
+      required_qualifications:
+        items:
+          minLength: 1
+          type: string
+        title: Required Qualifications
+        type: array
+      approval_status:
+        $ref: '#/$defs/ApprovalStatus'
+      usage_permission:
+        $ref: '#/$defs/UsagePermission'
+      approved_by:
+        anyOf:
+        - minLength: 1
+          type: string
+        - type: 'null'
+        default: null
+        title: Approved By
+      approved_on:
+        anyOf:
+        - format: date
+          type: string
+        - type: 'null'
+        default: null
+        title: Approved On
+      reviewer_notes:
+        anyOf:
+        - minLength: 1
+          type: string
+        - type: 'null'
+        default: null
+        title: Reviewer Notes
+    required:
+    - claim_id
+    - proposed_statement
+    - supporting_evidence_ids
+    - contribution_scope
+    - verification_status
+    - approval_status
+    - usage_permission
+    title: CareerClaim
+    type: object
+  Certification:
+    additionalProperties: false
+    properties:
+      evidence_id:
+        pattern: ^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$
+        title: Evidence Id
+        type: string
+      description:
+        minLength: 1
+        title: Description
+        type: string
+      context:
+        minLength: 1
+        title: Context
+        type: string
+      start_date:
+        anyOf:
+        - format: date
+          type: string
+        - type: 'null'
+        default: null
+        title: Start Date
+      end_date:
+        anyOf:
+        - format: date
+          type: string
+        - type: 'null'
+        default: null
+        title: End Date
+      contribution_scope:
+        $ref: '#/$defs/ContributionScope'
+      source_ids:
+        items:
+          pattern: ^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$
+          type: string
+        minItems: 1
+        title: Source Ids
+        type: array
+      verification_status:
+        $ref: '#/$defs/VerificationStatus'
+      confidence:
+        $ref: '#/$defs/Confidence'
+      uncertainty:
+        anyOf:
+        - minLength: 1
+          type: string
+        - type: 'null'
+        default: null
+        title: Uncertainty
+      confidentiality:
+        $ref: '#/$defs/Confidentiality'
+      metrics:
+        items:
+          $ref: '#/$defs/Metric'
+        title: Metrics
+        type: array
+      notes:
+        anyOf:
+        - minLength: 1
+          type: string
+        - type: 'null'
+        default: null
+        title: Notes
+      qualifications:
+        items:
+          minLength: 1
+          type: string
+        title: Qualifications
+        type: array
+      category:
+        const: CERTIFICATION
+        title: Category
+        type: string
+      title:
+        minLength: 1
+        title: Title
+        type: string
+      issuer:
+        minLength: 1
+        title: Issuer
+        type: string
+    required:
+    - evidence_id
+    - description
+    - context
+    - contribution_scope
+    - source_ids
+    - verification_status
+    - confidence
+    - confidentiality
+    - category
+    - title
+    - issuer
+    title: Certification
+    type: object
+  Confidence:
+    enum:
+    - HIGH
+    - MEDIUM
+    - LOW
+    - UNKNOWN
+    title: Confidence
+    type: string
+  Confidentiality:
+    enum:
+    - PUBLIC
+    - PRIVATE
+    - RESTRICTED
+    - PROHIBITED_PUBLICATION
+    title: Confidentiality
+    type: string
+  ContributionScope:
+    enum:
+    - INDIVIDUAL
+    - TEAM
+    - PROGRAMME
+    title: ContributionScope
+    type: string
+  Education:
+    additionalProperties: false
+    properties:
+      evidence_id:
+        pattern: ^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$
+        title: Evidence Id
+        type: string
+      description:
+        minLength: 1
+        title: Description
+        type: string
+      context:
+        minLength: 1
+        title: Context
+        type: string
+      start_date:
+        anyOf:
+        - format: date
+          type: string
+        - type: 'null'
+        default: null
+        title: Start Date
+      end_date:
+        anyOf:
+        - format: date
+          type: string
+        - type: 'null'
+        default: null
+        title: End Date
+      contribution_scope:
+        $ref: '#/$defs/ContributionScope'
+      source_ids:
+        items:
+          pattern: ^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$
+          type: string
+        minItems: 1
+        title: Source Ids
+        type: array
+      verification_status:
+        $ref: '#/$defs/VerificationStatus'
+      confidence:
+        $ref: '#/$defs/Confidence'
+      uncertainty:
+        anyOf:
+        - minLength: 1
+          type: string
+        - type: 'null'
+        default: null
+        title: Uncertainty
+      confidentiality:
+        $ref: '#/$defs/Confidentiality'
+      metrics:
+        items:
+          $ref: '#/$defs/Metric'
+        title: Metrics
+        type: array
+      notes:
+        anyOf:
+        - minLength: 1
+          type: string
+        - type: 'null'
+        default: null
+        title: Notes
+      qualifications:
+        items:
+          minLength: 1
+          type: string
+        title: Qualifications
+        type: array
+      category:
+        const: EDUCATION
+        title: Category
+        type: string
+      institution:
+        minLength: 1
+        title: Institution
+        type: string
+      credential:
+        minLength: 1
+        title: Credential
+        type: string
+      field_of_study:
+        anyOf:
+        - minLength: 1
+          type: string
+        - type: 'null'
+        default: null
+        title: Field Of Study
+    required:
+    - evidence_id
+    - description
+    - context
+    - contribution_scope
+    - source_ids
+    - verification_status
+    - confidence
+    - confidentiality
+    - category
+    - institution
+    - credential
+    title: Education
+    type: object
+  EmploymentExperience:
+    additionalProperties: false
+    properties:
+      evidence_id:
+        pattern: ^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$
+        title: Evidence Id
+        type: string
+      description:
+        minLength: 1
+        title: Description
+        type: string
+      context:
+        minLength: 1
+        title: Context
+        type: string
+      start_date:
+        anyOf:
+        - format: date
+          type: string
+        - type: 'null'
+        default: null
+        title: Start Date
+      end_date:
+        anyOf:
+        - format: date
+          type: string
+        - type: 'null'
+        default: null
+        title: End Date
+      contribution_scope:
+        $ref: '#/$defs/ContributionScope'
+      source_ids:
+        items:
+          pattern: ^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$
+          type: string
+        minItems: 1
+        title: Source Ids
+        type: array
+      verification_status:
+        $ref: '#/$defs/VerificationStatus'
+      confidence:
+        $ref: '#/$defs/Confidence'
+      uncertainty:
+        anyOf:
+        - minLength: 1
+          type: string
+        - type: 'null'
+        default: null
+        title: Uncertainty
+      confidentiality:
+        $ref: '#/$defs/Confidentiality'
+      metrics:
+        items:
+          $ref: '#/$defs/Metric'
+        title: Metrics
+        type: array
+      notes:
+        anyOf:
+        - minLength: 1
+          type: string
+        - type: 'null'
+        default: null
+        title: Notes
+      qualifications:
+        items:
+          minLength: 1
+          type: string
+        title: Qualifications
+        type: array
+      category:
+        const: EMPLOYMENT
+        title: Category
+        type: string
+      employer:
+        minLength: 1
+        title: Employer
+        type: string
+      role:
+        minLength: 1
+        title: Role
+        type: string
+    required:
+    - evidence_id
+    - description
+    - context
+    - contribution_scope
+    - source_ids
+    - verification_status
+    - confidence
+    - confidentiality
+    - category
+    - employer
+    - role
+    title: EmploymentExperience
+    type: object
+  EvidenceSource:
+    additionalProperties: false
+    properties:
+      source_id:
+        pattern: ^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$
+        title: Source Id
+        type: string
+      kind:
+        enum:
+        - DOCUMENT
+        - RECORD
+        - INTERVIEW
+        - SELF_REPORT
+        - PUBLIC_LINK
+        title: Kind
+        type: string
+      title:
+        minLength: 1
+        title: Title
+        type: string
+      locator:
+        minLength: 1
+        title: Locator
+        type: string
+      provenance:
+        minLength: 1
+        title: Provenance
+        type: string
+      verification_status:
+        $ref: '#/$defs/VerificationStatus'
+      confidentiality:
+        $ref: '#/$defs/Confidentiality'
+      captured_on:
+        anyOf:
+        - format: date
+          type: string
+        - type: 'null'
+        default: null
+        title: Captured On
+      qualifications:
+        items:
+          minLength: 1
+          type: string
+        title: Qualifications
+        type: array
+    required:
+    - source_id
+    - kind
+    - title
+    - locator
+    - provenance
+    - verification_status
+    - confidentiality
+    title: EvidenceSource
+    type: object
+  Metric:
+    additionalProperties: false
+    properties:
+      metric_id:
+        pattern: ^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$
+        title: Metric Id
+        type: string
+      value:
+        anyOf:
+        - type: number
+        - pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+          type: string
+        title: Value
+      unit:
+        minLength: 1
+        title: Unit
+        type: string
+      scope:
+        $ref: '#/$defs/ContributionScope'
+      context:
+        minLength: 1
+        title: Context
+        type: string
+      source_ids:
+        items:
+          pattern: ^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$
+          type: string
+        minItems: 1
+        title: Source Ids
+        type: array
+    required:
+    - metric_id
+    - value
+    - unit
+    - scope
+    - context
+    - source_ids
+    title: Metric
+    type: object
+  Project:
+    additionalProperties: false
+    properties:
+      evidence_id:
+        pattern: ^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$
+        title: Evidence Id
+        type: string
+      description:
+        minLength: 1
+        title: Description
+        type: string
+      context:
+        minLength: 1
+        title: Context
+        type: string
+      start_date:
+        anyOf:
+        - format: date
+          type: string
+        - type: 'null'
+        default: null
+        title: Start Date
+      end_date:
+        anyOf:
+        - format: date
+          type: string
+        - type: 'null'
+        default: null
+        title: End Date
+      contribution_scope:
+        $ref: '#/$defs/ContributionScope'
+      source_ids:
+        items:
+          pattern: ^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$
+          type: string
+        minItems: 1
+        title: Source Ids
+        type: array
+      verification_status:
+        $ref: '#/$defs/VerificationStatus'
+      confidence:
+        $ref: '#/$defs/Confidence'
+      uncertainty:
+        anyOf:
+        - minLength: 1
+          type: string
+        - type: 'null'
+        default: null
+        title: Uncertainty
+      confidentiality:
+        $ref: '#/$defs/Confidentiality'
+      metrics:
+        items:
+          $ref: '#/$defs/Metric'
+        title: Metrics
+        type: array
+      notes:
+        anyOf:
+        - minLength: 1
+          type: string
+        - type: 'null'
+        default: null
+        title: Notes
+      qualifications:
+        items:
+          minLength: 1
+          type: string
+        title: Qualifications
+        type: array
+      category:
+        const: PROJECT
+        title: Category
+        type: string
+      project_name:
+        minLength: 1
+        title: Project Name
+        type: string
+      role:
+        anyOf:
+        - minLength: 1
+          type: string
+        - type: 'null'
+        default: null
+        title: Role
+    required:
+    - evidence_id
+    - description
+    - context
+    - contribution_scope
+    - source_ids
+    - verification_status
+    - confidence
+    - confidentiality
+    - category
+    - project_name
+    title: Project
+    type: object
+  Publication:
+    additionalProperties: false
+    properties:
+      evidence_id:
+        pattern: ^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$
+        title: Evidence Id
+        type: string
+      description:
+        minLength: 1
+        title: Description
+        type: string
+      context:
+        minLength: 1
+        title: Context
+        type: string
+      start_date:
+        anyOf:
+        - format: date
+          type: string
+        - type: 'null'
+        default: null
+        title: Start Date
+      end_date:
+        anyOf:
+        - format: date
+          type: string
+        - type: 'null'
+        default: null
+        title: End Date
+      contribution_scope:
+        $ref: '#/$defs/ContributionScope'
+      source_ids:
+        items:
+          pattern: ^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$
+          type: string
+        minItems: 1
+        title: Source Ids
+        type: array
+      verification_status:
+        $ref: '#/$defs/VerificationStatus'
+      confidence:
+        $ref: '#/$defs/Confidence'
+      uncertainty:
+        anyOf:
+        - minLength: 1
+          type: string
+        - type: 'null'
+        default: null
+        title: Uncertainty
+      confidentiality:
+        $ref: '#/$defs/Confidentiality'
+      metrics:
+        items:
+          $ref: '#/$defs/Metric'
+        title: Metrics
+        type: array
+      notes:
+        anyOf:
+        - minLength: 1
+          type: string
+        - type: 'null'
+        default: null
+        title: Notes
+      qualifications:
+        items:
+          minLength: 1
+          type: string
+        title: Qualifications
+        type: array
+      category:
+        const: PUBLICATION
+        title: Category
+        type: string
+      title:
+        minLength: 1
+        title: Title
+        type: string
+      publisher:
+        anyOf:
+        - minLength: 1
+          type: string
+        - type: 'null'
+        default: null
+        title: Publisher
+    required:
+    - evidence_id
+    - description
+    - context
+    - contribution_scope
+    - source_ids
+    - verification_status
+    - confidence
+    - confidentiality
+    - category
+    - title
+    title: Publication
+    type: object
+  Skill:
+    additionalProperties: false
+    properties:
+      evidence_id:
+        pattern: ^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$
+        title: Evidence Id
+        type: string
+      description:
+        minLength: 1
+        title: Description
+        type: string
+      context:
+        minLength: 1
+        title: Context
+        type: string
+      start_date:
+        anyOf:
+        - format: date
+          type: string
+        - type: 'null'
+        default: null
+        title: Start Date
+      end_date:
+        anyOf:
+        - format: date
+          type: string
+        - type: 'null'
+        default: null
+        title: End Date
+      contribution_scope:
+        $ref: '#/$defs/ContributionScope'
+      source_ids:
+        items:
+          pattern: ^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$
+          type: string
+        minItems: 1
+        title: Source Ids
+        type: array
+      verification_status:
+        $ref: '#/$defs/VerificationStatus'
+      confidence:
+        $ref: '#/$defs/Confidence'
+      uncertainty:
+        anyOf:
+        - minLength: 1
+          type: string
+        - type: 'null'
+        default: null
+        title: Uncertainty
+      confidentiality:
+        $ref: '#/$defs/Confidentiality'
+      metrics:
+        items:
+          $ref: '#/$defs/Metric'
+        title: Metrics
+        type: array
+      notes:
+        anyOf:
+        - minLength: 1
+          type: string
+        - type: 'null'
+        default: null
+        title: Notes
+      qualifications:
+        items:
+          minLength: 1
+          type: string
+        title: Qualifications
+        type: array
+      category:
+        const: SKILL
+        title: Category
+        type: string
+      skill_name:
+        minLength: 1
+        title: Skill Name
+        type: string
+    required:
+    - evidence_id
+    - description
+    - context
+    - contribution_scope
+    - source_ids
+    - verification_status
+    - confidence
+    - confidentiality
+    - category
+    - skill_name
+    title: Skill
+    type: object
+  UsagePermission:
+    enum:
+    - NOT_REQUESTED
+    - GRANTED
+    - DENIED
+    title: UsagePermission
+    type: string
+  VerificationStatus:
+    enum:
+    - VERIFIED
+    - VERIFIED_WITH_QUALIFICATION
+    - NEEDS_VERIFICATION
+    - CONFLICTING
+    - UNSUPPORTED
+    - PROHIBITED
+    title: VerificationStatus
+    type: string
+additionalProperties: false
+properties:
+  schema_version:
+    const: '1.0'
+    title: Schema Version
+    type: string
+  profile:
+    $ref: '#/$defs/CandidateProfile'
+  sources:
+    items:
+      $ref: '#/$defs/EvidenceSource'
+    title: Sources
+    type: array
+  evidence:
+    items:
+      discriminator:
+        mapping:
+          ACHIEVEMENT: '#/$defs/Achievement'
+          CERTIFICATION: '#/$defs/Certification'
+          EDUCATION: '#/$defs/Education'
+          EMPLOYMENT: '#/$defs/EmploymentExperience'
+          PROJECT: '#/$defs/Project'
+          PUBLICATION: '#/$defs/Publication'
+          SKILL: '#/$defs/Skill'
+        propertyName: category
+      oneOf:
+      - $ref: '#/$defs/Education'
+      - $ref: '#/$defs/EmploymentExperience'
+      - $ref: '#/$defs/Project'
+      - $ref: '#/$defs/Skill'
+      - $ref: '#/$defs/Achievement'
+      - $ref: '#/$defs/Publication'
+      - $ref: '#/$defs/Certification'
+    title: Evidence
+    type: array
+  claims:
+    items:
+      $ref: '#/$defs/CareerClaim'
+    title: Claims
+    type: array
+required:
+- schema_version
+- profile
+- sources
+- evidence
+- claims
+title: CareerDataset
+type: object
