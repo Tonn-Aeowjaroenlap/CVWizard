@@ -1,0 +1,22 @@
+name: Offline validation and tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -e .
+      - run: python -m cvwizard validate data/examples/dataset.yaml
+      - run: python -m cvwizard validate-intake data/examples/reviewed-intake.yaml
+      - run: python -m unittest discover -s tests -v
+      - run: |
+          python -m cvwizard ingest data/examples/sources/fictional_cv_v1.txt data/examples/sources/fictional_cv_v2.md --output data/private/ci-intake.yaml
+          python -m cvwizard validate-intake data/private/ci-intake.yaml
+          python -m cvwizard review-report data/private/ci-intake.yaml
