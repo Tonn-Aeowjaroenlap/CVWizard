@@ -55,6 +55,7 @@ class ReviewDecision(StrictModel):
     reason: Text
     evidence_source_ids: list[Identifier] = Field(default_factory=list)
     qualification: Text | None = None
+    approved_wording: Text | None = None
     outstanding_evidence: Text | None = None
     personal_cv_permission: bool = False
     external_disclosure_permission: bool = False
@@ -69,12 +70,21 @@ class ReviewDecision(StrictModel):
             raise ValueError("acceptance requires cited evidence sources")
         if self.decision == DecisionKind.QUALIFY and not self.qualification:
             raise ValueError("qualified decision requires qualification")
+        if self.decision == DecisionKind.QUALIFY and (
+            self.personal_cv_permission or self.external_disclosure_permission or self.public_portfolio_permission
+        ):
+            if not self.approved_wording:
+                raise ValueError("permitted qualified decision requires human-approved wording")
+            if self.qualification and self.qualification.casefold() not in self.approved_wording.casefold():
+                raise ValueError("approved wording must include the qualification")
         if self.decision == DecisionKind.NEEDS_EVIDENCE and not self.outstanding_evidence:
             raise ValueError("needs-evidence decision requires outstanding_evidence")
         if self.decision not in {DecisionKind.ACCEPT, DecisionKind.QUALIFY} and (
             self.personal_cv_permission or self.external_disclosure_permission or self.public_portfolio_permission
         ):
             raise ValueError("rejected or outstanding assertion cannot receive usage permission")
+        if self.decision not in {DecisionKind.ACCEPT, DecisionKind.QUALIFY} and self.approved_wording:
+            raise ValueError("rejected or outstanding assertion cannot have approved wording")
         if self.public_portfolio_permission and not self.external_disclosure_permission:
             raise ValueError("public permission requires external disclosure permission")
         return self
@@ -116,6 +126,19 @@ def validate_intake(intake: Intake) -> list[str]:
             errors.append(f"source {source.source_id}: unknown superseded source")
         if source.supersedes_source_id == source.source_id:
             errors.append(f"source {source.source_id}: cannot supersede itself")
+    visited: set[str] = set()
+    for source_id in sources:
+        if source_id in visited:
+            continue
+        trail: set[str] = set()
+        current = source_id
+        while current in sources and current not in visited:
+            if current in trail:
+                errors.append(f"source {current}: cyclic supersession")
+                break
+            trail.add(current)
+            current = sources[current].supersedes_source_id or ""
+        visited.update(trail)
     for assertion in intake.assertions:
         if assertion.source_id not in sources:
             errors.append(f"assertion {assertion.assertion_id}: missing source")
@@ -177,9 +200,15 @@ def export_facts(intake: Intake, audience: Literal["personal_cv", "external", "p
         }[audience]
         if not allowed:
             continue
+        wording = decision.approved_wording if decision.decision == DecisionKind.QUALIFY else (
+            decision.approved_wording or assertion.text
+        )
+        if not wording:
+            raise ValueError(f"qualified decision {decision.decision_id} has no approved wording")
         result.append({
             "assertion_id": assertion.assertion_id, "source_id": source.source_id,
-            "location": assertion.location, "text": assertion.text,
+            "location": assertion.location,
+            "approved_wording": wording,
             "qualification": decision.qualification or "", "decision_id": decision.decision_id,
         })
     return result

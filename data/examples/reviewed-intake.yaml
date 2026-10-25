@@ -70,6 +70,7 @@ decisions:
     reason: The invented record supports limited use only.
     evidence_source_ids: [src-fictional-record]
     qualification: As recorded in the invented assessment.
+    approved_wording: Intermediate Python, as recorded in the invented assessment.
     personal_cv_permission: true
   - decision_id: review-fictional-outstanding
     assertion_id: asrt-fictional-other-role

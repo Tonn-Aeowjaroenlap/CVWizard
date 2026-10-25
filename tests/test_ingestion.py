@@ -15,6 +15,7 @@ from pathlib import Path
 
 from cvwizard.ingestion import ingest
 from cvwizard.models import Confidentiality
+from cvwizard.output_policy import private_output_path
 from cvwizard.review import DecisionKind, ReviewDecision, export_facts, load_intake, validate_intake
 
 
@@ -54,10 +55,15 @@ class IngestionTests(unittest.TestCase):
             decided_at=datetime(2026, 1, 1, tzinfo=timezone.utc),
             reason="Fictional employer record cited for pilot", evidence_source_ids=[source],
             qualification="Role title needs employer confirmation", personal_cv_permission=True,
+            approved_wording="Reliability Engineer; role title needs employer confirmation",
         )
         self.intake.decisions.append(decision)
         self.assertEqual(validate_intake(self.intake), [])
-        self.assertEqual(len(export_facts(self.intake, "personal_cv")), 1)
+        facts = export_facts(self.intake, "personal_cv")
+        self.assertEqual(len(facts), 1)
+        self.assertEqual(facts[0]["approved_wording"], decision.approved_wording)
+        self.assertNotIn("text", facts[0])
+        self.assertIn(assertion.text, [a.text for a in self.intake.assertions])
         self.assertEqual(export_facts(self.intake, "external"), [])
         self.assertEqual(export_facts(self.intake, "public"), [])
         self.intake.decisions.append(ReviewDecision(
@@ -85,6 +91,13 @@ class IngestionTests(unittest.TestCase):
             ReviewDecision(decision=DecisionKind.REJECT, personal_cv_permission=True, **base)
         with self.assertRaisesRegex(ValueError, "qualification"):
             ReviewDecision(decision=DecisionKind.QUALIFY, evidence_source_ids=[assertion.source_id], **base)
+        with self.assertRaisesRegex(ValueError, "human-approved wording"):
+            ReviewDecision(decision=DecisionKind.QUALIFY, evidence_source_ids=[assertion.source_id],
+                           qualification="fictional limit", personal_cv_permission=True, **base)
+        with self.assertRaisesRegex(ValueError, "include the qualification"):
+            ReviewDecision(decision=DecisionKind.QUALIFY, evidence_source_ids=[assertion.source_id],
+                           qualification="fictional limit", approved_wording="Unqualified claim",
+                           personal_cv_permission=True, **base)
         self.intake.conflicts = []
         self.assertIn("conflict report does not match", "\n".join(validate_intake(self.intake)))
         with self.assertRaisesRegex(ValueError, "invalid intake"):
@@ -114,7 +127,8 @@ class IngestionTests(unittest.TestCase):
                 archive.writestr("word/document.xml", '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body><w:p><w:r><w:t>Job title: Invented Tester</w:t></w:r></w:p></w:body></w:document>')
             self.assertEqual(ingest([docx]).assertions[0].location, "paragraph:1")
             output = folder / "intake.yaml"
-            run = subprocess.run([sys.executable, "-m", "cvwizard", "ingest", str(V1), str(V2), "--output", str(output)], capture_output=True, text=True)
+            run = subprocess.run([sys.executable, "-m", "cvwizard", "ingest", str(V1), str(V2), "--output", str(output),
+                                  "--private-output-root", directory], capture_output=True, text=True)
             self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
             parsed, errors = load_intake(output)
             self.assertEqual(errors, [])
@@ -122,7 +136,8 @@ class IngestionTests(unittest.TestCase):
             report = subprocess.run([sys.executable, "-m", "cvwizard", "review-report", str(output)], capture_output=True, text=True)
             self.assertIn("CONFLICT job title", report.stdout)
             facts = folder / "facts.json"
-            run = subprocess.run([sys.executable, "-m", "cvwizard", "export-facts", str(output), "--audience", "public", "--output", str(facts)], capture_output=True, text=True)
+            run = subprocess.run([sys.executable, "-m", "cvwizard", "export-facts", str(output), "--audience", "public", "--output", str(facts),
+                                  "--private-output-root", directory], capture_output=True, text=True)
             self.assertEqual(run.returncode, 0)
             self.assertEqual(json.loads(facts.read_text()), [])
             pdf = folder / "empty.pdf"
@@ -134,8 +149,83 @@ class IngestionTests(unittest.TestCase):
         intake, errors = load_intake(ROOT / "data/examples/reviewed-intake.yaml")
         self.assertEqual(errors, [])
         self.assertIsNotNone(intake)
-        self.assertEqual(len(export_facts(intake, "personal_cv")), 2)
+        facts = export_facts(intake, "personal_cv")
+        self.assertEqual(len(facts), 2)
+        qualified = next(f for f in facts if f["qualification"])
+        self.assertIn(qualified["qualification"].casefold(), qualified["approved_wording"].casefold())
+        self.assertNotIn("text", qualified)
         self.assertEqual(export_facts(intake, "public"), [])
+
+    def test_output_path_policy_and_cli_rejections(self) -> None:
+        ignored = ROOT / "data/private/policy-test.yaml"
+        self.assertEqual(private_output_path(ignored), ignored)
+        tracked = ROOT / "data/examples/accidental-private.yaml"
+        with self.assertRaisesRegex(ValueError, "unsafe output path"):
+            private_output_path(tracked)
+        with tempfile.TemporaryDirectory() as directory:
+            folder = Path(directory)
+            outside = folder / "intake.yaml"
+            with self.assertRaisesRegex(ValueError, "requires --private-output-root"):
+                private_output_path(outside)
+            self.assertEqual(private_output_path(outside, folder), outside)
+            with self.assertRaisesRegex(ValueError, "outside configured private root"):
+                private_output_path(folder.parent / "elsewhere.yaml", folder)
+            command = [sys.executable, "-m", "cvwizard", "ingest", str(V1), "--output"]
+            result = subprocess.run(command + [str(tracked)], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("unsafe output path", result.stdout)
+            self.assertFalse(tracked.exists())
+            result = subprocess.run(command + [str(outside)], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("requires --private-output-root", result.stdout)
+            review_fixture = ROOT / "data/examples/reviewed-intake.yaml"
+            result = subprocess.run([sys.executable, "-m", "cvwizard", "export-facts", str(review_fixture),
+                                     "--audience", "personal_cv", "--output", str(folder / "facts.json")], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("requires --private-output-root", result.stdout)
+            result = subprocess.run([sys.executable, "-m", "cvwizard", "export-facts", str(review_fixture),
+                                     "--audience", "personal_cv", "--output", str(tracked)], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("unsafe output path", result.stdout)
+            self.assertFalse(tracked.exists())
+        with tempfile.TemporaryDirectory(dir=ROOT / "data/private") as directory:
+            link = Path(directory) / "alias"
+            link.symlink_to(ROOT / "data/examples", target_is_directory=True)
+            with self.assertRaisesRegex(ValueError, "unsafe output path"):
+                private_output_path(link / "leak.yaml")
+
+    def test_malformed_docx_and_supersession_cycles(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            folder = Path(directory)
+            bad_zip = folder / "bad.docx"
+            bad_zip.write_bytes(b"not a ZIP archive")
+            with self.assertRaisesRegex(ValueError, "DOCX archive or document XML is invalid"):
+                ingest([bad_zip])
+            missing_xml = folder / "missing.docx"
+            with zipfile.ZipFile(missing_xml, "w") as archive:
+                archive.writestr("other.xml", "<root/>")
+            with self.assertRaisesRegex(ValueError, "DOCX archive or document XML is invalid"):
+                ingest([missing_xml])
+            invalid_xml = folder / "invalid.docx"
+            with zipfile.ZipFile(invalid_xml, "w") as archive:
+                archive.writestr("word/document.xml", "<broken")
+            with self.assertRaisesRegex(ValueError, "DOCX archive or document XML is invalid"):
+                ingest([invalid_xml])
+            wrong_xml = folder / "wrong.docx"
+            with zipfile.ZipFile(wrong_xml, "w") as archive:
+                archive.writestr("word/document.xml", "<root/>")
+            with self.assertRaisesRegex(ValueError, "lacks a Word document body"):
+                ingest([wrong_xml])
+        with self.assertRaisesRegex(ValueError, "input filename not provided"):
+            ingest([V1, V2], supersedes={"mistyped.docx": self.intake.sources[0].source_id})
+        first, second = self.intake.sources
+        first.supersedes_source_id = first.source_id
+        self.assertIn("cannot supersede itself", "\n".join(validate_intake(self.intake)))
+        first.supersedes_source_id = second.source_id
+        second.supersedes_source_id = first.source_id
+        self.assertIn("cyclic supersession", "\n".join(validate_intake(self.intake)))
+        second.supersedes_source_id = "src-nonexistent"
+        self.assertIn("unknown superseded source", "\n".join(validate_intake(self.intake)))
 
     @unittest.skipUnless(shutil.which("pdftotext"), "pdftotext is optional")
     def test_text_pdf_extraction(self) -> None:

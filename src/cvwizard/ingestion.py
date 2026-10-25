@@ -31,9 +31,15 @@ def _paragraphs(path: Path) -> list[tuple[str, str]]:
         text = path.read_text(encoding="utf-8-sig")
         return [(f"line:{i}", line.strip()) for i, line in enumerate(text.splitlines(), 1) if line.strip()]
     if suffix == ".docx":
-        with zipfile.ZipFile(path) as archive:
-            xml = archive.read("word/document.xml")
-        root = ElementTree.fromstring(xml)
+        try:
+            with zipfile.ZipFile(path) as archive:
+                xml = archive.read("word/document.xml")
+            root = ElementTree.fromstring(xml)
+            word_ns = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+            if root.tag != f"{{{word_ns}}}document" or root.find(f"{{{word_ns}}}body") is None:
+                raise ValueError("DOCX document XML lacks a Word document body")
+        except (zipfile.BadZipFile, KeyError, RuntimeError, ElementTree.ParseError) as exc:
+            raise ValueError("DOCX archive or document XML is invalid") from exc
         ns = {"w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main"}
         paragraphs = []
         for i, paragraph in enumerate(root.findall(".//w:body//w:p", ns), 1):
@@ -74,6 +80,9 @@ def ingest(paths: list[Path], *, supersedes: dict[str, str] | None = None) -> In
     assertions: list[Assertion] = []
     seen: set[str] = set()
     supersedes = supersedes or {}
+    unknown_names = set(supersedes) - {path.name for path in paths}
+    if unknown_names:
+        raise ValueError(f"--supersedes refers to an input filename not provided: {', '.join(sorted(unknown_names))}")
     for path in paths:
         raw = path.read_bytes()
         source_id = stable_id("src", raw)
