@@ -8,6 +8,7 @@ from pathlib import Path
 
 import yaml
 
+from .capability_bank import create_outputs
 from .ingestion import ingest
 from .output_policy import private_output_path
 from .review import export_facts, load_intake
@@ -33,6 +34,12 @@ def main() -> int:
     export.add_argument("--audience", choices=["personal_cv", "external", "public"], required=True)
     export.add_argument("--output", required=True, type=Path)
     export.add_argument("--private-output-root", type=Path, help="explicit absolute private root outside Git")
+    bank_command = commands.add_parser("build-bank", help="build private CV-derived capability bank from an editorial seed")
+    bank_command.add_argument("sources", nargs="+", type=Path)
+    bank_command.add_argument("--seed", required=True, type=Path)
+    bank_command.add_argument("--output-dir", required=True, type=Path)
+    bank_command.add_argument("--old-intake", type=Path, help="prior intake for assertion ID migration")
+    bank_command.add_argument("--private-output-root", type=Path, help="explicit absolute private root outside Git")
     args = parser.parse_args()
     if args.command == "validate":
         errors = validate_path(args.path)
@@ -41,6 +48,15 @@ def main() -> int:
                 print(f"ERROR: {error}")
             return 1
         print(f"Valid CVWizard dataset: {args.path}")
+        return 0
+    if args.command == "build-bank":
+        try:
+            output = private_output_path(args.output_dir / "02_master_capability_bank.json", args.private_output_root).parent
+            files = create_outputs(args.sources, args.seed, output, args.old_intake)
+        except (OSError, ValueError, yaml.YAMLError) as exc:
+            print(f"ERROR: {exc}")
+            return 1
+        print(f"Created {len(files)} private capability-bank files in {output}")
         return 0
     if args.command == "ingest":
         try:

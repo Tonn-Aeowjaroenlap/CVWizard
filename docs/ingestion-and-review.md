@@ -22,6 +22,8 @@ python -m cvwizard review-report data/private/intake.yaml
 
 TXT and Markdown use UTF-8 text and line references. DOCX extraction reads text in OOXML paragraphs using the standard library; malformed ZIP archives or Word XML are rejected with an input error. Text-based PDF extraction uses the local `pdftotext` executable when available and records page and line references. Scanned or image-only PDFs, OCR, tables/columns with ambiguous reading order, comments, tracked changes, embedded objects and semantic extraction are unsupported. Extraction is deliberately literal: each nonblank line or paragraph becomes an unverified assertion. Recognized labels (`Employment date`, `Job title`, `Quantitative achievement`, `Project description`, `Attribution`, `Skill proficiency`, `Qualification`, `Credential`) provide grouping hints. Other text remains visible for review but has no conflict grouping.
 
+Phase 0C preserves DOCX internal tabs and line breaks in paragraph text. For documents ingested before that correction, some assertion IDs may change even though the document hash and paragraph location do not. Generate an old-to-new mapping with `build-bank --old-intake`; keep the old intake and any decisions intact.
+
 Different values under the same recognized label produce a potential conflict group. This is a broad warning: unrelated jobs with the same label can be grouped, and paraphrases or unlabeled contradictions can be missed. No conflict is resolved automatically. Preserve all competing assertions and source references. Reviewers should separate distinct roles/projects in their private notes and add missing evidence, especially for individual versus team attribution and expired credentials.
 
 ## Manual review and audit

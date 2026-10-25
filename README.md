@@ -35,3 +35,7 @@ python -m cvwizard review-report data/private/pilot-intake.yaml
 The fictional documents intentionally disagree. Import creates only unverified assertions and potential conflict groups. [The fictional review ledger](data/examples/reviewed-intake.yaml) shows accepted, rejected, qualified and outstanding decisions and an approval change. Human review, audit entries, permission controls, format limits and a private real-data pilot checklist are described in [ingestion and review](docs/ingestion-and-review.md). `export-facts` writes only explicitly permitted reviewed facts to a local JSON file; it does not create a CV or publish anything.
 
 Private CLI outputs must go to established Git-ignored directories or under an explicit absolute `--private-output-root` outside Git. Qualified exports require reviewer-approved wording that includes the qualification.
+
+## Phase 0C capability bank
+
+Phase 0C consolidates explicitly supplied, candidate-authorised CV versions into a private, source-linked capability bank. A curated seed groups overlapping statements and records interpretations and review questions. The generator does not verify facts or approve wording. See [the Phase 0C guide](docs/phase0c-capability-bank.md) and [Phase 1 job-fit interface](docs/phase1-job-fit-interface.md).
