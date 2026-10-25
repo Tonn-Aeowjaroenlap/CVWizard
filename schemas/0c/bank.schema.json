@@ -1,0 +1,364 @@
+{
+  "$defs": {
+    "BankEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "competency_id": {
+          "title": "Competency Id",
+          "type": "string"
+        },
+        "canonical": {
+          "title": "Canonical",
+          "type": "string"
+        },
+        "category": {
+          "title": "Category",
+          "type": "string"
+        },
+        "subcategory": {
+          "title": "Subcategory",
+          "type": "string"
+        },
+        "aliases": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Aliases",
+          "type": "array"
+        },
+        "related_terms": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Related Terms",
+          "type": "array"
+        },
+        "skills_knowledge_methods": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Skills Knowledge Methods",
+          "type": "array"
+        },
+        "tools_technologies": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Tools Technologies",
+          "type": "array"
+        },
+        "industries_domains": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Industries Domains",
+          "type": "array"
+        },
+        "contexts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Contexts",
+          "type": "array"
+        },
+        "described_contribution": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Described Contribution"
+        },
+        "quantitative_achievements": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Quantitative Achievements",
+          "type": "array"
+        },
+        "source_refs": {
+          "items": {
+            "$ref": "#/$defs/SourceRef"
+          },
+          "minItems": 1,
+          "title": "Source Refs",
+          "type": "array"
+        },
+        "alternative_cv_wording": {
+          "items": {
+            "$ref": "#/$defs/ProposedDescription"
+          },
+          "title": "Alternative Cv Wording",
+          "type": "array"
+        },
+        "transferable_applications": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Transferable Applications",
+          "type": "array"
+        },
+        "ambiguities": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Ambiguities",
+          "type": "array"
+        },
+        "explicit_vs_interpreted": {
+          "enum": [
+            "EXPLICIT",
+            "INTERPRETED"
+          ],
+          "title": "Explicit Vs Interpreted",
+          "type": "string"
+        },
+        "interpretation_note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Interpretation Note"
+        },
+        "status": {
+          "default": "CV_DERIVED",
+          "enum": [
+            "CV_DERIVED",
+            "CANDIDATE_REVIEWED",
+            "EVIDENCE_VERIFIED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "source_statements": {
+          "items": {
+            "$ref": "#/$defs/SourceStatement"
+          },
+          "minItems": 1,
+          "title": "Source Statements",
+          "type": "array"
+        }
+      },
+      "required": [
+        "competency_id",
+        "canonical",
+        "category",
+        "subcategory",
+        "source_refs",
+        "explicit_vs_interpreted",
+        "source_statements"
+      ],
+      "title": "BankEntry",
+      "type": "object"
+    },
+    "Confidentiality": {
+      "enum": [
+        "PUBLIC",
+        "PRIVATE",
+        "RESTRICTED",
+        "PROHIBITED_PUBLICATION"
+      ],
+      "title": "Confidentiality",
+      "type": "string"
+    },
+    "ProposedDescription": {
+      "additionalProperties": false,
+      "properties": {
+        "application": {
+          "title": "Application",
+          "type": "string"
+        },
+        "wording": {
+          "title": "Wording",
+          "type": "string"
+        },
+        "basis": {
+          "items": {
+            "$ref": "#/$defs/SourceRef"
+          },
+          "minItems": 1,
+          "title": "Basis",
+          "type": "array"
+        },
+        "label": {
+          "const": "PROPOSED_WORDING",
+          "default": "PROPOSED_WORDING",
+          "title": "Label",
+          "type": "string"
+        }
+      },
+      "required": [
+        "application",
+        "wording",
+        "basis"
+      ],
+      "title": "ProposedDescription",
+      "type": "object"
+    },
+    "SourceDocument": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "title": {
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "locator": {
+          "minLength": 1,
+          "title": "Locator",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "confidentiality": {
+          "$ref": "#/$defs/Confidentiality",
+          "default": "PRIVATE"
+        },
+        "supersedes_source_id": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Supersedes Source Id"
+        }
+      },
+      "required": [
+        "source_id",
+        "title",
+        "locator",
+        "sha256"
+      ],
+      "title": "SourceDocument",
+      "type": "object"
+    },
+    "SourceRef": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        },
+        "location": {
+          "title": "Location",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "location"
+      ],
+      "title": "SourceRef",
+      "type": "object"
+    },
+    "SourceStatement": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        },
+        "location": {
+          "title": "Location",
+          "type": "string"
+        },
+        "assertion_id": {
+          "title": "Assertion Id",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "location",
+        "assertion_id",
+        "text"
+      ],
+      "title": "SourceStatement",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "0c-bank-1",
+      "default": "0c-bank-1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "collection_note": {
+      "title": "Collection Note",
+      "type": "string"
+    },
+    "missing_versions": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Missing Versions",
+      "type": "array"
+    },
+    "application_targets": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Application Targets",
+      "type": "object"
+    },
+    "taxonomy": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Taxonomy",
+      "type": "array"
+    },
+    "sources": {
+      "items": {
+        "$ref": "#/$defs/SourceDocument"
+      },
+      "title": "Sources",
+      "type": "array"
+    },
+    "competencies": {
+      "items": {
+        "$ref": "#/$defs/BankEntry"
+      },
+      "title": "Competencies",
+      "type": "array"
+    }
+  },
+  "required": [
+    "collection_note",
+    "missing_versions",
+    "application_targets",
+    "taxonomy",
+    "sources",
+    "competencies"
+  ],
+  "title": "MasterBank",
+  "type": "object"
+}

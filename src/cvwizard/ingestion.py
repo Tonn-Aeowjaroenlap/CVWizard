@@ -42,8 +42,19 @@ def _paragraphs(path: Path) -> list[tuple[str, str]]:
             raise ValueError("DOCX archive or document XML is invalid") from exc
         ns = {"w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main"}
         paragraphs = []
+        text_tag = f"{{{word_ns}}}t"
+        tab_tag = f"{{{word_ns}}}tab"
+        break_tags = {f"{{{word_ns}}}br", f"{{{word_ns}}}cr"}
         for i, paragraph in enumerate(root.findall(".//w:body//w:p", ns), 1):
-            value = "".join(node.text or "" for node in paragraph.findall(".//w:t", ns)).strip()
+            parts = []
+            for node in paragraph.iter():
+                if node.tag == text_tag:
+                    parts.append(node.text or "")
+                elif node.tag == tab_tag:
+                    parts.append("\t")
+                elif node.tag in break_tags:
+                    parts.append("\n")
+            value = "".join(parts).strip()
             if value:
                 paragraphs.append((f"paragraph:{i}", value))
         return paragraphs

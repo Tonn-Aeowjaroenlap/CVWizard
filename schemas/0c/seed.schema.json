@@ -1,0 +1,255 @@
+{
+  "$defs": {
+    "CapabilitySeed": {
+      "additionalProperties": false,
+      "properties": {
+        "competency_id": {
+          "title": "Competency Id",
+          "type": "string"
+        },
+        "canonical": {
+          "title": "Canonical",
+          "type": "string"
+        },
+        "category": {
+          "title": "Category",
+          "type": "string"
+        },
+        "subcategory": {
+          "title": "Subcategory",
+          "type": "string"
+        },
+        "aliases": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Aliases",
+          "type": "array"
+        },
+        "related_terms": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Related Terms",
+          "type": "array"
+        },
+        "skills_knowledge_methods": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Skills Knowledge Methods",
+          "type": "array"
+        },
+        "tools_technologies": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Tools Technologies",
+          "type": "array"
+        },
+        "industries_domains": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Industries Domains",
+          "type": "array"
+        },
+        "contexts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Contexts",
+          "type": "array"
+        },
+        "described_contribution": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Described Contribution"
+        },
+        "quantitative_achievements": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Quantitative Achievements",
+          "type": "array"
+        },
+        "source_refs": {
+          "items": {
+            "$ref": "#/$defs/SourceRef"
+          },
+          "minItems": 1,
+          "title": "Source Refs",
+          "type": "array"
+        },
+        "alternative_cv_wording": {
+          "items": {
+            "$ref": "#/$defs/ProposedDescription"
+          },
+          "title": "Alternative Cv Wording",
+          "type": "array"
+        },
+        "transferable_applications": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Transferable Applications",
+          "type": "array"
+        },
+        "ambiguities": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Ambiguities",
+          "type": "array"
+        },
+        "explicit_vs_interpreted": {
+          "enum": [
+            "EXPLICIT",
+            "INTERPRETED"
+          ],
+          "title": "Explicit Vs Interpreted",
+          "type": "string"
+        },
+        "interpretation_note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Interpretation Note"
+        },
+        "status": {
+          "default": "CV_DERIVED",
+          "enum": [
+            "CV_DERIVED",
+            "CANDIDATE_REVIEWED",
+            "EVIDENCE_VERIFIED"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "competency_id",
+        "canonical",
+        "category",
+        "subcategory",
+        "source_refs",
+        "explicit_vs_interpreted"
+      ],
+      "title": "CapabilitySeed",
+      "type": "object"
+    },
+    "ProposedDescription": {
+      "additionalProperties": false,
+      "properties": {
+        "application": {
+          "title": "Application",
+          "type": "string"
+        },
+        "wording": {
+          "title": "Wording",
+          "type": "string"
+        },
+        "basis": {
+          "items": {
+            "$ref": "#/$defs/SourceRef"
+          },
+          "minItems": 1,
+          "title": "Basis",
+          "type": "array"
+        },
+        "label": {
+          "const": "PROPOSED_WORDING",
+          "default": "PROPOSED_WORDING",
+          "title": "Label",
+          "type": "string"
+        }
+      },
+      "required": [
+        "application",
+        "wording",
+        "basis"
+      ],
+      "title": "ProposedDescription",
+      "type": "object"
+    },
+    "SourceRef": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        },
+        "location": {
+          "title": "Location",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "location"
+      ],
+      "title": "SourceRef",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "0c-seed-1",
+      "default": "0c-seed-1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "collection_note": {
+      "title": "Collection Note",
+      "type": "string"
+    },
+    "missing_versions": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Missing Versions",
+      "type": "array"
+    },
+    "application_targets": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Application Targets",
+      "type": "object"
+    },
+    "additional_categories": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Additional Categories",
+      "type": "array"
+    },
+    "competencies": {
+      "items": {
+        "$ref": "#/$defs/CapabilitySeed"
+      },
+      "title": "Competencies",
+      "type": "array"
+    }
+  },
+  "required": [
+    "collection_note",
+    "competencies"
+  ],
+  "title": "BankSeed",
+  "type": "object"
+}

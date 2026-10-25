@@ -10,6 +10,10 @@ Before implementing ingestion, agree on a private sample inventory, source locat
 
 Future phases may add reviewed ingestion, job-specific drafting, document generation and a public portfolio workflow. Each should consume the same evidence contract, add tests around attribution and privacy, and require human sign-off before publication or application submission. An API remains optional.
 
+## Phase 0C — master competency and capability bank
+
+Consolidate candidate-authorised CV versions into a private, source-linked, CV-derived capability bank before external evidence verification. Preserve Phase 0A and 0B1. See [Phase 0C](phase0c-capability-bank.md). [Phase 1](phase1-job-fit-interface.md) will use this bank for job-advert coverage and gap assessment, subject to candidate review.
+
 ## Phase 0B1 — synthetic ingestion and review
 
 Offline TXT, Markdown, DOCX and text-based PDF intake, source-anchored unverified assertions, potential conflict groups, manual decision audit and permission-gated fact export. See [ingestion and review](ingestion-and-review.md). Phase 0B2 is a private real-data pilot only after the readiness criteria in that guide are met.
