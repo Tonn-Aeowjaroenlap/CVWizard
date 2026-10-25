@@ -12,6 +12,8 @@ python -c 'import sys, yaml; from cvwizard.models import CareerDataset; sys.stdo
 
 The schema snapshot is tested against the Python model to catch drift. Cross-record rules remain in Python and are documented here; JSON Schema alone cannot check referenced IDs or human approval.
 
+The project pins Pydantic to 2.13.4 because newer releases can generate a different JSON Schema for the same model and fail the checked-in snapshot test. Revisit the pin and regenerate/review the snapshot as a separate schema maintenance change.
+
 ## Evidence model
 
 - `profile` identifies the candidate, separate from evidence.
